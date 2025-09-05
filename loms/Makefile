@@ -4,7 +4,8 @@ bin-dir:
 	mkdir -p ${BINDIR}
 
 build: bin-dir
-	go build -o ${BINDIR}/app ${PACKAGE}
+	#go build -o ${BINDIR}/app ${PACKAGE}
+	go build -o ${BINDIR}/app ${BINDIR}/${PACKAGE}
 
 install-grpc-deps: bin-dir
 	test -f ${BINDIR}/protoc-gen-go || \
