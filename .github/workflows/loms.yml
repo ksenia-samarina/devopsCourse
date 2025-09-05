@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        ports: ["5432:5432"]
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: loms
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      BINDIR: bin
+      PACKAGE: ./cmd/app
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: loms
+      POSTGRES_PORT: 5432
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
+
+      - name: Install protoc
+        run: sudo apt-get update && sudo apt-get install -y protobuf-compiler
+
+      - name: Install Go dependencies
+        run: go mod tidy
+
+      - name: Generate gRPC code
+        run: make generate-grpc
+
+      - name: Install minimock
+        run: make install-minimock
+
+      - name: Run go generate (mocks, etc.)
+        run: make go-generate
+
+      - name: Run migrations
+        run: make migration-up
+
+      - name: Build project
+        run: make build
+
+      - name: Run tests
+        run: go test ./... -v

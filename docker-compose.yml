@@ -1,0 +1,30 @@
+version: "3.9"
+
+services:
+  loms:
+    image: loms
+    build:
+      context: ./loms/
+      dockerfile: ./Dockerfile
+    ports:
+      - "8081:8081"
+      - "8082:8082"
+    depends_on:
+      - loms-storage
+    networks:
+      - loms-net
+  loms-storage:
+    image: postgres:15.1
+    env_file: ./loms/.env
+    environment:
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./tmp/loms/storage:/var/lib/postgresql/data
+    networks:
+      - loms-net
+
+networks:
+  loms-net:
+    driver: bridge

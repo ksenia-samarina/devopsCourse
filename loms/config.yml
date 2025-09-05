@@ -1,0 +1,12 @@
+port-grpc: 8081
+port-rest: 8082
+storages:
+  postgres: "postgres://user:password@loms-storage:5432/loms"
+  minConnections: 2
+  maxConnections: 10
+  maxConnIdleTime: "1m"
+  maxConnLifetime: "1h"
+crons:
+  cancelOrders:
+    timeout: "10m"
+    interval: "30s"

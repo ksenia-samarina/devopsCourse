@@ -1,0 +1,93 @@
+syntax = "proto3";
+
+package loms.v1;
+
+option go_package = "devopsCourse/loms/internal/pkg/loms_v1;loms_v1";
+
+import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
+
+service LomsV1 {
+  // Create a new order from the list of items. Items will be reserved on warehouse
+  rpc createOrder (CreateOrderIn) returns (CreateOrderOut) {
+    option (google.api.http) = {
+      post: "/v1/orders"
+      body: "*"
+    };
+  }
+
+  // Show info by order
+  rpc listOrder (ListOrderIn) returns (ListOrderOut) {
+    option (google.api.http) = {
+      get: "/v1/orders/{orderID}"
+    };
+  }
+
+  // Cancel an order. Remove reserve from all items in an order
+  rpc cancelOrder (CancelOrderIn) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/v1/orders/{orderID}"
+    };
+  }
+
+  // Return amount of items, that can be purchased from different warehouses
+  rpc cntStocks (StocksIn) returns (StocksOut) {
+    option (google.api.http) = {
+      get: "/v1/stocks/{sku}"
+    };
+  }
+}
+
+message CreateOrderIn {
+  int64 user = 1;
+  repeated Item items = 2;
+}
+
+message Item {
+  uint32 sku = 1;
+  uint32 count = 2;
+}
+
+message CreateOrderOut {
+  int64 orderID = 1;
+}
+
+message ListOrderIn {
+  int64 orderID = 1;
+}
+
+message ListOrderOut {
+  int64 user = 1;
+  OrderStatus status = 2;
+  repeated Item items = 3;
+}
+
+enum OrderStatus {
+  STATUS_UNKNOWN = 0;
+  STATUS_NEW = 1;
+  STATUS_AWAITING_PAYMENT = 2;
+  STATUS_FAILED = 3;
+  STATUS_PAYED = 4;
+  STATUS_CANCELLED = 5;
+}
+
+message OrderPayedIn {
+  int64 orderID = 1;
+}
+
+message CancelOrderIn {
+  int64 orderID = 1;
+}
+
+message StocksIn {
+  uint32 sku = 1;
+}
+
+message StocksOut {
+  repeated StockItem stocks = 1;
+}
+
+message StockItem {
+  int64  warehouseID = 1;
+  uint64 count = 2;
+}
