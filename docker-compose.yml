@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   loms:
-    image: loms
+    image: 94.139.247.63:5000/loms:latest
     build:
       context: ./loms/
       dockerfile: ./Dockerfile
@@ -13,6 +13,19 @@ services:
       - loms-storage
     networks:
       - loms-net
+
+  loms-client:
+    image: 94.139.247.63:5000/loms-client:latest
+    build:
+      context: ./loms-client/
+      dockerfile: ./Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - loms
+    networks:
+      - loms-net
+
   loms-storage:
     image: postgres:15.1
     env_file: ./loms/.env

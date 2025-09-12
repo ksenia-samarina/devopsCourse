@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:8082/v1"; // измени под свой сервер
+const BASE_URL = "http://loms:8082/v1";
 
 export interface Item {
     sku: number;

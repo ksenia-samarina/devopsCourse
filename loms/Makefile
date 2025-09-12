@@ -7,6 +7,9 @@ build: bin-dir
 	#go build -o ${BINDIR}/app ${PACKAGE}
 	go build -o ${BINDIR}/app ${CURDIR}/${PACKAGE}
 
+tests-run:
+	go test ./...
+
 install-grpc-deps: bin-dir
 	test -f ${BINDIR}/protoc-gen-go || \
 		GOBIN=${BINDIR} go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
