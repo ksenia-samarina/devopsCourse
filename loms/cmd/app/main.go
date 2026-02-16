@@ -96,7 +96,7 @@ func main() {
 		log.Fatalf("failed to register gateway: %v", err)
 	}
 
-	restAddr := cfg.PortREST
+	restAddr := fmt.Sprintf(":%s", cfg.PortREST)
 	log.Printf("REST gateway listening at %s", restAddr)
 	if err := http.ListenAndServe(restAddr, mux); err != nil {
 		log.Fatalf("failed to serve REST gateway: %v", err)

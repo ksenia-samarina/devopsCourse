@@ -1,5 +1,5 @@
-port-grpc: 8081
-port-rest: 8082
+port-grpc: "8081"
+port-rest: "8082"
 storages:
   postgres: "postgres://user:password@loms-storage:5432/loms"
   minConnections: 2
