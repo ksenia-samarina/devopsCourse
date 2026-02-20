@@ -5,6 +5,7 @@ import (
 	"devopsCourse/internal/config"
 	"devopsCourse/internal/domains/order"
 	"devopsCourse/internal/handlers"
+	"devopsCourse/internal/middleware"
 	"devopsCourse/internal/repository/postgres"
 	"devopsCourse/internal/repository/postgres/transactor"
 	"devopsCourse/libs/interceptors"
@@ -98,7 +99,8 @@ func main() {
 
 	restAddr := fmt.Sprintf(":%s", cfg.PortREST)
 	log.Printf("REST gateway listening at %s", restAddr)
-	if err := http.ListenAndServe(restAddr, mux); err != nil {
+
+	if err := http.ListenAndServe(restAddr, middleware.AllowCORS(mux)); err != nil {
 		log.Fatalf("failed to serve REST gateway: %v", err)
 	}
 }

@@ -1,4 +1,5 @@
-const BASE_URL = "http://loms:8082/v1";
+// const BASE_URL = "http://loms:8082/v1";
+const BASE_URL = "http://localhost:8082/v1"
 
 export interface Item {
     sku: number;
